@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 // HostingStartup's in the primary assembly are run automatically.
-[assembly: HostingStartup(typeof(SampleStartups.StartupInjection))]
+//[assembly: HostingStartup(typeof(SampleStartups.StartupInjection))]
 
 namespace SampleStartups
 {

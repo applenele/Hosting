@@ -99,7 +99,7 @@ namespace Microsoft.AspNetCore.Hosting
                 throw new ArgumentNullException(nameof(configureServices));
             }
 
-            return ConfigureServices((_ , services) => configureServices(services));
+            return ConfigureServices((_, services) => configureServices(services));
         }
 
         /// <summary>
@@ -166,6 +166,7 @@ namespace Microsoft.AspNetCore.Hosting
                 Console.WriteLine("The environment variable 'ASPNETCORE_SERVER.URLS' is obsolete and has been replaced with 'ASPNETCORE_URLS'");
             }
 
+            // 构建ServiceCollection
             var hostingServices = BuildCommonServices(out var hostingStartupErrors);
             var applicationServices = hostingServices.Clone();
             var hostingServiceProvider = hostingServices.BuildServiceProvider();
@@ -179,6 +180,7 @@ namespace Microsoft.AspNetCore.Hosting
                 _config,
                 hostingStartupErrors);
 
+            // host初始化
             host.Initialize();
 
             return host;

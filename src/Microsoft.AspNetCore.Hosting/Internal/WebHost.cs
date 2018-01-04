@@ -154,7 +154,9 @@ namespace Microsoft.AspNetCore.Hosting.Internal
         {
             if (_applicationServices == null)
             {
+                // 确保拿到Startup
                 EnsureStartup();
+                // 调用Startup的ConfigureServices方法，此时自己需要注入的东西开始往容器里面注入
                 _applicationServices = _startup.ConfigureServices(_applicationServiceCollection);
             }
         }

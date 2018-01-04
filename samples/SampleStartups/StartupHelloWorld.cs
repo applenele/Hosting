@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 
 // Note that this sample will not run. It is only here to illustrate usage patterns.
 
@@ -15,6 +16,12 @@ namespace SampleStartups
             {
                 await context.Response.WriteAsync("Hello World!");
             });
+        }
+
+
+        public override void ConfigureServices(IServiceCollection services)
+        {
+
         }
 
         // Entry point for the application.

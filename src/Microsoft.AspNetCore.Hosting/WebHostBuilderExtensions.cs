@@ -55,12 +55,14 @@ namespace Microsoft.AspNetCore.Hosting
                 .UseSetting(WebHostDefaults.ApplicationKey, startupAssemblyName)
                 .ConfigureServices(services =>
                 {
+                    //Startup类如果实现了IStartup，直接注入到ServiceCollection，在Build的时候需要取出来使用
                     if (typeof(IStartup).GetTypeInfo().IsAssignableFrom(startupType.GetTypeInfo()))
                     {
                         services.AddSingleton(typeof(IStartup), startupType);
                     }
                     else
                     {
+                        // Startup类如果实现了IStartup，则进行一次转换，类似生成一个代理类，注入到ServiceCollection
                         services.AddSingleton(typeof(IStartup), sp =>
                         {
                             var hostingEnvironment = sp.GetRequiredService<IHostingEnvironment>();
