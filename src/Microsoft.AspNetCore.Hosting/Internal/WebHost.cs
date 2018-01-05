@@ -182,6 +182,10 @@ namespace Microsoft.AspNetCore.Hosting.Internal
                 var builder = builderFactory.CreateBuilder(Server.Features);
                 builder.ApplicationServices = _applicationServices;
 
+                // 实现了IStartupFilter接口的类，实际上也是往管道上注册中间件
+                // 唯一的区别在与，实现了IStartupFilter的中间件会在Startup里面注册的中间件之前执行
+                // 原理就在此处代码中
+                // 详细应用参看 https://www.cnblogs.com/artech/p/asp-net-core-real-pipeline-05.html
                 var startupFilters = _applicationServices.GetService<IEnumerable<IStartupFilter>>();
                 Action<IApplicationBuilder> configure = _startup.Configure;
                 foreach (var filter in startupFilters.Reverse())
