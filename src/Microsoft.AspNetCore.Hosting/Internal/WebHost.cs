@@ -171,21 +171,30 @@ namespace Microsoft.AspNetCore.Hosting.Internal
             _startup = _hostingServiceProvider.GetRequiredService<IStartup>();
         }
 
+        /// <summary>
+        /// 启动应用，做初始化相应的事情
+        /// 1.service 加入到容器里面
+        /// 2.middleware 加入到管道
+        /// 3.构建ApplicationBuilder
+        /// </summary>
+        /// <returns></returns>
         private RequestDelegate BuildApplication()
         {
             try
             {
+                // 拿到startup 调用Startup里面的ConfigureServices，service注入到容器里面
                 EnsureApplicationServices();
+                // 拿到server 做相应的处理 
+                // TODO
                 EnsureServer();
 
                 var builderFactory = _applicationServices.GetRequiredService<IApplicationBuilderFactory>();
                 var builder = builderFactory.CreateBuilder(Server.Features);
                 builder.ApplicationServices = _applicationServices;
 
-                // 实现了IStartupFilter接口的类，实际上也是往管道上注册中间件
-                // 唯一的区别在与，实现了IStartupFilter的中间件会在Startup里面注册的中间件之前执行
-                // 原理就在此处代码中
-                // 详细应用参看 https://www.cnblogs.com/artech/p/asp-net-core-real-pipeline-05.html
+
+                #region 构建中间件
+                //ISartupFilter + Startup 里面的中间件加起来
                 var startupFilters = _applicationServices.GetService<IEnumerable<IStartupFilter>>();
                 Action<IApplicationBuilder> configure = _startup.Configure;
                 foreach (var filter in startupFilters.Reverse())
@@ -194,6 +203,8 @@ namespace Microsoft.AspNetCore.Hosting.Internal
                 }
 
                 configure(builder);
+                #endregion
+
 
                 return builder.Build();
             }
